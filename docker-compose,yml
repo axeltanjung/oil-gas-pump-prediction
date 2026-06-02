@@ -1,0 +1,47 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    container_name: pump_backend
+    env_file:
+      - .env
+    environment:
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+      - MLFLOW_TRACKING_URI=/app/mlflow/mlruns
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+      - ./mlflow:/app/mlflow
+      - ./exports:/app/exports
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0) if urllib.request.urlopen('http://localhost:8000/health').status==200 else sys.exit(1)"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+
+  mlflow:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    container_name: pump_mlflow
+    command: mlflow ui --host 0.0.0.0 --port 5000 --backend-store-uri /app/mlflow/mlruns
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./mlflow:/app/mlflow
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    container_name: pump_frontend
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+    environment:
+      - VITE_API_BASE_URL=http://localhost:8000
