@@ -1,6 +1,7 @@
 """
 Data loading & preprocessing utilities.
 """
+
 from __future__ import annotations
 
 import os
@@ -26,7 +27,5 @@ def basic_clean(df: pd.DataFrame) -> pd.DataFrame:
     """Sort, drop dupes, forward-fill minor gaps within each pump."""
     df = df.sort_values(["pump_id", "timestamp"]).copy()
     df = df.drop_duplicates(subset=["pump_id", "timestamp"])
-    df[config.RAW_FEATURES] = (
-        df.groupby("pump_id")[config.RAW_FEATURES].ffill().bfill()
-    )
+    df[config.RAW_FEATURES] = df.groupby("pump_id")[config.RAW_FEATURES].ffill().bfill()
     return df.reset_index(drop=True)

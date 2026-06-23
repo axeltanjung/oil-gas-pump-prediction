@@ -4,6 +4,7 @@ Dashboard summary endpoint + alerts list.
 Aggregates the latest batch predictions per pump. Run
 `python -m backend.ml.batch_predict` to populate the `predictions` table.
 """
+
 from __future__ import annotations
 
 from fastapi import APIRouter, HTTPException

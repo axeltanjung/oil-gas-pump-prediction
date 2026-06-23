@@ -7,6 +7,7 @@ sensor readings, enabling health-trend / degradation forecasting.
 Run:
     python -m backend.ml.train_forecast
 """
+
 from __future__ import annotations
 
 import json
@@ -82,7 +83,10 @@ def train() -> dict:
         def __init__(self, n_features, hidden, layers):
             super().__init__()
             self.lstm = nn.LSTM(
-                n_features, hidden, layers, batch_first=True,
+                n_features,
+                hidden,
+                layers,
+                batch_first=True,
                 dropout=0.2 if layers > 1 else 0.0,
             )
             self.head = nn.Sequential(
@@ -93,7 +97,9 @@ def train() -> dict:
             out, _ = self.lstm(x)
             return self.head(out[:, -1, :]).squeeze(-1)
 
-    model = LSTMForecaster(len(SEQ_FEATURES), config.LSTM_HIDDEN, config.LSTM_LAYERS).to(device)
+    model = LSTMForecaster(
+        len(SEQ_FEATURES), config.LSTM_HIDDEN, config.LSTM_LAYERS
+    ).to(device)
     opt = torch.optim.Adam(model.parameters(), lr=config.LSTM_LR)
     loss_fn = nn.MSELoss()
 
@@ -125,7 +131,9 @@ def train() -> dict:
                 running += loss.item() * len(xb)
             epoch_loss = running / len(train_ds)
             mlflow_utils.log_metrics({"train_mse": epoch_loss})
-            print(f"[train_forecast] epoch {epoch + 1}/{config.LSTM_EPOCHS} mse={epoch_loss:.5f}")
+            print(
+                f"[train_forecast] epoch {epoch + 1}/{config.LSTM_EPOCHS} mse={epoch_loss:.5f}"
+            )
 
         # Evaluation
         model.eval()
@@ -152,7 +160,10 @@ def train() -> dict:
     with open(out, "w") as f:
         json.dump(metrics, f, indent=2)
 
-    print("[train_forecast] metrics:", json.dumps({k: round(v, 5) for k, v in metrics.items()}))
+    print(
+        "[train_forecast] metrics:",
+        json.dumps({k: round(v, 5) for k, v in metrics.items()}),
+    )
     return metrics
 
 

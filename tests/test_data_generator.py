@@ -1,6 +1,7 @@
 """
 Tests for the synthetic data generator (use a small config for speed).
 """
+
 import os
 
 os.environ.setdefault("N_PUMPS", "3")
@@ -17,10 +18,20 @@ def test_generate_shape_and_columns():
     assert len(df) > 0
 
     required = {
-        "timestamp", "pump_id", "pressure", "vibration", "temperature", "rpm",
-        "flow_rate", "operating_hours", "maintenance_history",
-        "ambient_temperature", "power_consumption",
-        "failure_within_7_days", "rul_days", "anomaly_score",
+        "timestamp",
+        "pump_id",
+        "pressure",
+        "vibration",
+        "temperature",
+        "rpm",
+        "flow_rate",
+        "operating_hours",
+        "maintenance_history",
+        "ambient_temperature",
+        "power_consumption",
+        "failure_within_7_days",
+        "rul_days",
+        "anomaly_score",
     }
     assert required.issubset(set(df.columns))
 

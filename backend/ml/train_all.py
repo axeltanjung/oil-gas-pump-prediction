@@ -4,6 +4,7 @@ Train all three models in sequence (data is generated if missing).
 Run:
     python -m backend.ml.train_all
 """
+
 from __future__ import annotations
 
 import json

@@ -1,6 +1,7 @@
 """
 PDF maintenance report generation (reportlab).
 """
+
 from __future__ import annotations
 
 import os

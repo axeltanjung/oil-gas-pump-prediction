@@ -8,6 +8,7 @@ retraining. Writes `data/pump_telemetry_drifted.csv`.
 Run:
     python -m backend.ml.drift_sim --bias 0.15 --noise 1.5
 """
+
 from __future__ import annotations
 
 import argparse

@@ -2,6 +2,7 @@
 Per-pump detail endpoint: telemetry trends, latest predictions, anomaly
 timeline, plus a downloadable PDF maintenance report.
 """
+
 from __future__ import annotations
 
 from fastapi import APIRouter, HTTPException, Query
@@ -14,12 +15,21 @@ from ...services.report import build_pump_report
 
 router = APIRouter(prefix="/pump", tags=["pump"])
 
-TREND_COLS = ["pressure", "vibration", "temperature", "rpm", "flow_rate", "power_consumption"]
+TREND_COLS = [
+    "pressure",
+    "vibration",
+    "temperature",
+    "rpm",
+    "flow_rate",
+    "power_consumption",
+]
 
 
 def _build_detail(pump_id: str, points: int) -> dict:
     if not table_exists("telemetry"):
-        raise HTTPException(status_code=503, detail="Telemetry table not found. Generate data first.")
+        raise HTTPException(
+            status_code=503, detail="Telemetry table not found. Generate data first."
+        )
 
     rows = query(
         "SELECT * FROM telemetry WHERE pump_id=? ORDER BY timestamp DESC LIMIT ?",
@@ -35,7 +45,8 @@ def _build_detail(pump_id: str, points: int) -> dict:
         trends[col] = [TrendPoint(timestamp=r["timestamp"], value=r[col]) for r in rows]
 
     anomaly_timeline = [
-        TrendPoint(timestamp=r["timestamp"], value=r.get("anomaly_score", 0.0)) for r in rows
+        TrendPoint(timestamp=r["timestamp"], value=r.get("anomaly_score", 0.0))
+        for r in rows
     ]
 
     # Latest predictions (prefer batch predictions table, else compute on the fly)
@@ -91,7 +102,9 @@ def pump_detail(pump_id: str, points: int = Query(300, ge=10, le=2000)) -> PumpD
 def pump_report(pump_id: str):
     detail = _build_detail(pump_id, points=50)
     path = build_pump_report(pump_id, detail)
-    return FileResponse(path, media_type="application/pdf", filename=f"report_{pump_id}.pdf")
+    return FileResponse(
+        path, media_type="application/pdf", filename=f"report_{pump_id}.pdf"
+    )
 
 
 @router.get("")

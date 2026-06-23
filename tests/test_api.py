@@ -1,6 +1,7 @@
 """
 Smoke tests for the FastAPI app (no trained models required for /health and /).
 """
+
 from fastapi.testclient import TestClient
 
 from backend.app.main import app

@@ -6,6 +6,7 @@ single-reading predictions, engineered (rolling) features are reconstructed
 using recent history from SQLite when available; otherwise sensible fallbacks
 (rolling mean = current value, rolling std = 0, delta = 0) are used.
 """
+
 from __future__ import annotations
 
 import json
@@ -120,7 +121,9 @@ def _build_feature_row(reading: dict) -> pd.DataFrame:
 def predict_failure(reading: dict) -> float:
     model = store.failure
     if model is None:
-        raise RuntimeError("Failure model not trained. Run `python -m backend.ml.train_all`.")
+        raise RuntimeError(
+            "Failure model not trained. Run `python -m backend.ml.train_all`."
+        )
     X = _build_feature_row(reading)
     return float(model.predict_proba(X)[0, 1])
 
@@ -128,7 +131,9 @@ def predict_failure(reading: dict) -> float:
 def predict_rul(reading: dict) -> float:
     model = store.rul
     if model is None:
-        raise RuntimeError("RUL model not trained. Run `python -m backend.ml.train_all`.")
+        raise RuntimeError(
+            "RUL model not trained. Run `python -m backend.ml.train_all`."
+        )
     X = _build_feature_row(reading)
     return float(max(model.predict(X)[0], 0.0))
 

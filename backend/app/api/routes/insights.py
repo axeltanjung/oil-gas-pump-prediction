@@ -1,6 +1,7 @@
 """
 AI insights endpoint: SHAP drivers, feature importance, model metrics.
 """
+
 from __future__ import annotations
 
 import json
@@ -31,7 +32,9 @@ def failure_drivers() -> list:
 @router.get("/feature-importance")
 def feature_importance() -> dict:
     return {
-        "failure": _read_json(os.path.join(mlcfg.MODEL_DIR, "failure_feature_importance.json")),
+        "failure": _read_json(
+            os.path.join(mlcfg.MODEL_DIR, "failure_feature_importance.json")
+        ),
         "rul": _read_json(os.path.join(mlcfg.MODEL_DIR, "rul_feature_importance.json")),
     }
 

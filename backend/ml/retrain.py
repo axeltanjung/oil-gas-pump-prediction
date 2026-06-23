@@ -7,6 +7,7 @@ a scheduler (cron / Snowflake Task / Airflow) for periodic refresh.
 Run:
     python -m backend.ml.retrain --regenerate
 """
+
 from __future__ import annotations
 
 import argparse
@@ -27,5 +28,7 @@ def main(regenerate: bool = False) -> None:
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("--regenerate", action="store_true", help="Regenerate synthetic data first")
+    ap.add_argument(
+        "--regenerate", action="store_true", help="Regenerate synthetic data first"
+    )
     main(**vars(ap.parse_args()))

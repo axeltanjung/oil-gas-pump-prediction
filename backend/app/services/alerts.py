@@ -1,6 +1,7 @@
 """
 Alert-level logic and maintenance recommendations shared across endpoints.
 """
+
 from __future__ import annotations
 
 from ..core.config import settings
@@ -48,7 +49,9 @@ def combine(*levels: str) -> str:
 
 def recommendation(level: str, rul_days: float | None = None) -> str:
     if level == CRITICAL:
-        base = "Immediate inspection required; schedule shutdown/maintenance within 48h."
+        base = (
+            "Immediate inspection required; schedule shutdown/maintenance within 48h."
+        )
     elif level == WARNING:
         base = "Plan maintenance; increase monitoring frequency."
     else:

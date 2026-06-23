@@ -2,6 +2,7 @@
 Pytest configuration: ensure the project root is importable so that
 `backend.*` and `data.*` packages resolve during tests.
 """
+
 import os
 import sys
 
