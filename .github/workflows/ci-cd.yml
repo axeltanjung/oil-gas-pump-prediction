@@ -15,10 +15,15 @@ env:
 
 jobs:
   lint:
-    name: Lint
+    name: Lint & Format
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/setup-python@v5
         with:
@@ -28,11 +33,17 @@ jobs:
       - name: Install linting tools
         run: pip install ruff
 
-      - name: Run ruff check
-        run: ruff check .
+      - name: Run ruff fix & format
+        run: |
+          ruff check --fix .
+          ruff format .
 
-      - name: Run ruff format check
-        run: ruff format --check .
+      - name: Commit formatting fixes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "style: auto-format with ruff [CI]"
+          commit_user_name: github-actions[bot]
+          commit_user_email: github-actions[bot]@users.noreply.github.com
 
   test:
     name: Test
