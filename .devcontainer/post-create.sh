@@ -4,8 +4,8 @@
 set -euo pipefail
 
 echo "=== Setting up Python environment ==="
-python -m venv /workspace/.venv
-source /workspace/.venv/bin/activate
+python -m venv "$HOME/.venv"
+source "$HOME/.venv/bin/activate"
 pip install --upgrade pip
 pip install -r requirements.txt
 pip install ruff pytest pytest-cov

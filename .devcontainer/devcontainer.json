@@ -25,7 +25,7 @@
         "esbenp.prettier-vscode"
       ],
       "settings": {
-        "python.defaultInterpreterPath": "/workspace/.venv/bin/python",
+        "python.defaultInterpreterPath": "~/.venv/bin/python",
         "python.terminal.activateEnvironment": true,
         "[python]": {
           "editor.defaultFormatter": "charliermarsh.ruff",
