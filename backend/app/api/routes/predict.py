@@ -1,3 +1,5 @@
+# Prediction endpoints: failure, RUL, anomaly.
+# Co-authored with CoCo
 """
 Prediction endpoints: failure, RUL, anomaly.
 """
@@ -5,7 +7,6 @@ from __future__ import annotations
 
 from fastapi import APIRouter, HTTPException
 
-from ...core.config import settings
 from ...schemas.io import (
     AnomalyPrediction,
     FailurePrediction,

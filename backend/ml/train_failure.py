@@ -1,3 +1,5 @@
+# Model 1 - Failure Classification (XGBoost) training script.
+# Co-authored with CoCo
 """
 Model 1 - Failure Classification (XGBoost).
 
@@ -22,7 +24,6 @@ from sklearn.metrics import (
     recall_score,
     roc_auc_score,
 )
-from sklearn.model_selection import train_test_split
 from xgboost import XGBClassifier
 
 from . import config, feature_engineering as fe, mlflow_utils, preprocessing
