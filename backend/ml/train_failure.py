@@ -9,6 +9,7 @@ MLflow, generates SHAP explainability + feature-importance artifacts.
 Run:
     python -m backend.ml.train_failure
 """
+
 from __future__ import annotations
 
 import json
@@ -90,7 +91,10 @@ def train() -> dict:
         mlflow_utils.log_artifact(config.FAILURE_MODEL_FILE)
         mlflow_utils.log_sklearn_model(model, "failure_model", config.REG_FAILURE)
 
-    print("[train_failure] metrics:", json.dumps({k: round(v, 4) for k, v in metrics.items()}))
+    print(
+        "[train_failure] metrics:",
+        json.dumps({k: round(v, 4) for k, v in metrics.items()}),
+    )
     return metrics
 
 

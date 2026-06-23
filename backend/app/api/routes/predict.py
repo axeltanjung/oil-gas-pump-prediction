@@ -3,6 +3,7 @@
 """
 Prediction endpoints: failure, RUL, anomaly.
 """
+
 from __future__ import annotations
 
 from fastapi import APIRouter, HTTPException
