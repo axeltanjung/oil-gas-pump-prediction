@@ -2,6 +2,7 @@
 MLflow helpers: configure tracking, start runs, register models.
 Falls back gracefully (no crash) if MLflow is unavailable.
 """
+
 from __future__ import annotations
 
 import contextlib
@@ -50,7 +51,9 @@ def log_artifact(path: str) -> None:
         mlflow.log_artifact(path)
 
 
-def log_sklearn_model(model, artifact_path: str, registered_name: str | None = None) -> None:
+def log_sklearn_model(
+    model, artifact_path: str, registered_name: str | None = None
+) -> None:
     if not _HAS_MLFLOW:
         return
     try:

@@ -4,6 +4,7 @@ FastAPI application entrypoint.
 Run:
     uvicorn backend.app.main:app --reload --host 0.0.0.0 --port 8000
 """
+
 from __future__ import annotations
 
 import time
@@ -41,7 +42,13 @@ async def log_requests(request: Request, call_next):
     start = time.time()
     response = await call_next(request)
     elapsed = (time.time() - start) * 1000
-    log.info("%s %s -> %s (%.1f ms)", request.method, request.url.path, response.status_code, elapsed)
+    log.info(
+        "%s %s -> %s (%.1f ms)",
+        request.method,
+        request.url.path,
+        response.status_code,
+        elapsed,
+    )
     return response
 
 

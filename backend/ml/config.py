@@ -1,6 +1,7 @@
 """
 Shared ML configuration: paths, feature lists, model names, hyperparameters.
 """
+
 from __future__ import annotations
 
 import os
@@ -13,7 +14,9 @@ CSV_PATH = os.path.join(DATA_DIR, "pump_telemetry.csv")
 SQLITE_PATH = os.getenv("SQLITE_PATH", os.path.join(DATA_DIR, "pumps.db"))
 
 # ---- MLflow ----
-MLFLOW_TRACKING_URI = os.getenv("MLFLOW_TRACKING_URI", os.path.join(ROOT, "mlflow", "mlruns"))
+MLFLOW_TRACKING_URI = os.getenv(
+    "MLFLOW_TRACKING_URI", os.path.join(ROOT, "mlflow", "mlruns")
+)
 MLFLOW_EXPERIMENT = os.getenv("MLFLOW_EXPERIMENT", "oil_gas_pump_prediction")
 
 # ---- Targets / horizon ----

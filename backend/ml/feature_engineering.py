@@ -5,6 +5,7 @@ Adds rolling statistics, deltas, and ratios per pump. The exact engineered
 feature list is persisted to `feature_meta.json` so inference can rebuild the
 same columns from a single reading + recent history.
 """
+
 from __future__ import annotations
 
 import json
@@ -15,7 +16,14 @@ import pandas as pd
 from . import config
 
 ROLL_WINDOWS = [6, 24]  # hours
-ROLL_COLS = ["pressure", "vibration", "temperature", "rpm", "flow_rate", "power_consumption"]
+ROLL_COLS = [
+    "pressure",
+    "vibration",
+    "temperature",
+    "rpm",
+    "flow_rate",
+    "power_consumption",
+]
 
 
 def engineer(df: pd.DataFrame) -> pd.DataFrame:

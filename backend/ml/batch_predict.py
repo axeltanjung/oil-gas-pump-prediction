@@ -8,6 +8,7 @@ table.
 Run:
     python -m backend.ml.batch_predict
 """
+
 from __future__ import annotations
 
 import os
@@ -35,8 +36,12 @@ def run(output_csv: str | None = None) -> pd.DataFrame:
     df["health_score"] = (1.0 - df["failure_proba"]).round(4)
 
     keep = [
-        "timestamp", "pump_id", "failure_proba", "rul_pred_days",
-        "health_score", "anomaly_score",
+        "timestamp",
+        "pump_id",
+        "failure_proba",
+        "rul_pred_days",
+        "health_score",
+        "anomaly_score",
     ]
     result = df[keep].copy()
 

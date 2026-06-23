@@ -6,6 +6,7 @@ Logs RMSE / MAE / R2 to MLflow.
 Run:
     python -m backend.ml.train_rul
 """
+
 from __future__ import annotations
 
 import json
@@ -60,7 +61,9 @@ def train() -> dict:
         mlflow_utils.log_artifact(config.RUL_MODEL_FILE)
         mlflow_utils.log_sklearn_model(model, "rul_model", config.REG_RUL)
 
-    print("[train_rul] metrics:", json.dumps({k: round(v, 4) for k, v in metrics.items()}))
+    print(
+        "[train_rul] metrics:", json.dumps({k: round(v, 4) for k, v in metrics.items()})
+    )
     return metrics
 
 

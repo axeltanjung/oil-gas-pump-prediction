@@ -17,6 +17,7 @@ Outputs:
 Run:
     python -m data.data_generator
 """
+
 from __future__ import annotations
 
 import os
@@ -50,14 +51,14 @@ rng = np.random.default_rng(RANDOM_SEED)
 @dataclass
 class PumpProfile:
     pump_id: str
-    base_pressure: float        # bar
-    base_vibration: float       # mm/s
-    base_temperature: float     # deg C
+    base_pressure: float  # bar
+    base_vibration: float  # mm/s
+    base_temperature: float  # deg C
     base_rpm: float
-    base_flow: float            # m3/h
-    base_power: float           # kW
-    wear_rate: float            # health decay per hour
-    install_hours: float        # operating hours at t0
+    base_flow: float  # m3/h
+    base_power: float  # kW
+    wear_rate: float  # health decay per hour
+    install_hours: float  # operating hours at t0
 
 
 def _make_profiles() -> list[PumpProfile]:
@@ -91,7 +92,7 @@ def _simulate_pump(profile: PumpProfile) -> pd.DataFrame:
     """
     n = N_HOURS
     health = np.empty(n)
-    failure_event = np.zeros(n, dtype=int)      # 1 at the hour a failure happens
+    failure_event = np.zeros(n, dtype=int)  # 1 at the hour a failure happens
     maintenance_history = np.zeros(n, dtype=int)  # cumulative maintenance count
     op_hours = np.empty(n)
 
@@ -135,9 +136,7 @@ def _simulate_pump(profile: PumpProfile) -> pd.DataFrame:
 
     # Vibration rises sharply with degradation + random spikes
     vibration = (
-        profile.base_vibration
-        + deg * rng.uniform(6, 10)
-        + rng.normal(0, 0.15, n)
+        profile.base_vibration + deg * rng.uniform(6, 10) + rng.normal(0, 0.15, n)
     )
     spike_idx = rng.random(n) < 0.01
     vibration[spike_idx] += rng.uniform(2, 6, spike_idx.sum())
@@ -154,11 +153,7 @@ def _simulate_pump(profile: PumpProfile) -> pd.DataFrame:
     temperature[overheat_idx] += rng.uniform(8, 18, overheat_idx.sum())
 
     # Pressure drops as the pump wears; cavitation = unstable pressure/flow
-    pressure = (
-        profile.base_pressure
-        - deg * rng.uniform(10, 20)
-        + rng.normal(0, 0.6, n)
-    )
+    pressure = profile.base_pressure - deg * rng.uniform(10, 20) + rng.normal(0, 0.6, n)
     cavitation_idx = rng.random(n) < 0.012
     pressure[cavitation_idx] -= rng.uniform(5, 12, cavitation_idx.sum())
 
@@ -166,19 +161,11 @@ def _simulate_pump(profile: PumpProfile) -> pd.DataFrame:
     rpm = profile.base_rpm - deg * rng.uniform(20, 60) + rng.normal(0, 5, n)
 
     # Flow rate decreases with wear and cavitation
-    flow_rate = (
-        profile.base_flow
-        - deg * rng.uniform(25, 50)
-        + rng.normal(0, 2.0, n)
-    )
+    flow_rate = profile.base_flow - deg * rng.uniform(25, 50) + rng.normal(0, 2.0, n)
     flow_rate[cavitation_idx] -= rng.uniform(10, 25, cavitation_idx.sum())
 
     # Power consumption increases as the pump strains
-    power = (
-        profile.base_power
-        + deg * rng.uniform(15, 30)
-        + rng.normal(0, 1.5, n)
-    )
+    power = profile.base_power + deg * rng.uniform(15, 30) + rng.normal(0, 1.5, n)
 
     # ----- Targets -----
     # RUL: hours until next failure -> days
@@ -196,7 +183,9 @@ def _simulate_pump(profile: PumpProfile) -> pd.DataFrame:
     # Anomaly score 0..1: combination of degradation + transient events
     z_vib = (vibration - profile.base_vibration) / (vibration.std() + 1e-6)
     z_temp = (temperature - profile.base_temperature) / (temperature.std() + 1e-6)
-    anomaly_raw = 0.5 * deg + 0.25 * np.clip(z_vib, 0, None) + 0.25 * np.clip(z_temp, 0, None)
+    anomaly_raw = (
+        0.5 * deg + 0.25 * np.clip(z_vib, 0, None) + 0.25 * np.clip(z_temp, 0, None)
+    )
     anomaly_score = np.round(np.clip(anomaly_raw / (anomaly_raw.max() + 1e-6), 0, 1), 4)
 
     timestamps = [START_TIME + timedelta(hours=int(t)) for t in range(n)]

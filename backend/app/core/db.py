@@ -1,6 +1,7 @@
 """
 SQLite access helpers (read-only telemetry + predictions queries for the API).
 """
+
 from __future__ import annotations
 
 import os
